@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #10b981;
+  --color-primary-hover: #059669;
+  --color-theme-bg: var(--theme-bg);
+  --color-theme-text: var(--theme-text);
+  --color-theme-muted: var(--theme-muted);
+  --color-theme-card: var(--theme-card);
+  --color-theme-border: var(--theme-border);
+  --color-theme-surface: var(--theme-surface);
+  --font-sans: 'Fira Code', 'JetBrains Mono', monospace;
+}
+
+:root {
+  --theme-bg: #f8fafc;
+  --theme-text: #0f172a;
+  --theme-muted: #64748b;
+  --theme-card: #ffffff;
+  --theme-border: #e2e8f0;
+  --theme-surface: #f1f5f9;
+}
+
+.dark {
+  --theme-bg: #0d1117;
+  --theme-text: #ffffff;
+  --theme-muted: #8b949e;
+  --theme-card: #161b22;
+  --theme-border: #30363d;
+  --theme-surface: #010409;
+}
+
+body {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+  font-family: var(--font-sans);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.glass {
+  background: var(--theme-card);
+  border: 1px solid var(--theme-border);
+}
+
+.glass-strong {
+  background: var(--theme-surface);
+  border: 1px solid var(--theme-border);
+}
+
+.btn-primary {
+  @apply px-4 py-2 bg-primary hover:bg-primary-hover text-white font-bold rounded transition-colors duration-300;
+}
