@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import { Terminal, LogOut, User } from 'lucide-react';
-import { useContext } from 'react';
+import { Terminal, LogOut, User, Moon, Sun } from 'lucide-react';
+import { useContext, useEffect, useState } from 'react';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import DietPlan from './pages/DietPlan';
@@ -17,6 +17,33 @@ const ProtectedRoute = ({ children }) => {
 
 const Navigation = () => {
   const { user, logout } = useContext(AuthContext);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    // Check initial theme from localStorage or system preference
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.documentElement.classList.add('dark');
+      setIsDark(true);
+    } else {
+      document.documentElement.classList.remove('dark');
+      setIsDark(false);
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    if (isDark) {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+      setIsDark(false);
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+      setIsDark(true);
+    }
+  };
   
   return (
     <nav className="fixed w-full z-50 glass border-b border-theme-border">
@@ -26,14 +53,21 @@ const Navigation = () => {
             <Terminal className="text-primary w-6 h-6" />
             <span className="font-bold text-xl tracking-tight">&lt;LuminaDiet /&gt;</span>
           </Link>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 md:gap-6">
+            <button 
+              onClick={toggleTheme} 
+              className="p-2 rounded-full hover:bg-theme-surface transition-colors text-theme-muted hover:text-primary"
+              aria-label="Toggle Theme"
+            >
+              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
             <Link to="/" className="text-theme-muted hover:text-primary transition-colors font-semibold hidden md:block">&gt; Home</Link>
             
             {user ? (
               <>
                 <Link to="/profile" className="text-theme-muted hover:text-primary transition-colors font-semibold hidden md:block">&gt; Generate</Link>
                 <Link to="/dashboard" className="text-theme-muted hover:text-primary transition-colors font-semibold hidden md:block">&gt; Registry</Link>
-                <div className="flex items-center gap-4 ml-4 pl-4 border-l border-theme-border">
+                <div className="flex items-center gap-4 ml-2 md:ml-4 pl-2 md:pl-4 border-l border-theme-border">
                   <div className="flex items-center gap-2 text-sm font-bold text-theme-text">
                     <div className="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center border border-primary/50">
                       {user.name.charAt(0).toUpperCase()}
@@ -46,8 +80,8 @@ const Navigation = () => {
                 </div>
               </>
             ) : (
-              <Link to="/auth" className="bg-primary hover:bg-primary-hover text-black px-4 py-2 rounded-lg font-bold transition-colors">
-                Login / Sign Up
+              <Link to="/auth" className="bg-primary hover:bg-primary-hover text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg font-bold transition-colors text-sm md:text-base">
+                Login
               </Link>
             )}
           </div>
